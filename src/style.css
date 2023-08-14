@@ -1,20 +1,36 @@
-h1, p {
+h1,
+p {
   font-family: Lato;
+  color: #fff;
+}
+
+body {
+  background: rgb(149, 170, 190);
+}
+
+.main {
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* justify-content: center; */
+}
+
+h1 {
+  margin-left: 5rem;
 }
 
 .square {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 24px;
+  font-size: 5em;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  height: 2em;
+  width: 2em;
 }
 
 .board-row:after {
@@ -26,9 +42,19 @@ h1, p {
 .status {
   margin-bottom: 10px;
 }
+
 .game {
+  /* margin-top: 1px; */
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
+  margin-left: auto;
+  margin-right: auto;
+  margin: 0 auto;
+  /* justify-content: center; */
+  /* border: 1px solid red; */
+  width: 42em;
+  padding: 2em;
+  background: white;
 }
 
 .game-info {

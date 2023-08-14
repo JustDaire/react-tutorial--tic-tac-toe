@@ -11,8 +11,72 @@ function Square({ value, onSquareClick }) {
 }
 
 export default function App() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove];
+
+  function handlePlay(nextSquares) {
+    // setHistory([...history, nextSquares]);
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+    // setXIsNext(!xIsNext);
+  }
+
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+    // setXIsNext(nextMove % 2 === 0);
+  }
+
+  const moves = history.map((squares, move) => {
+    let description: String;
+    if (move > 0) {
+      description = 'Go to move #' + move;
+      if (move > 1) {
+        // description = 'Go to move #' + move;
+      } else {
+        // description = 'Go to game start';
+      }
+      if (calculateWinner(squares)) {
+        console.log('Winner is', calculateWinner(squares));
+      }
+      return (
+        <>
+          <li key={move}>
+            <button onClick={() => jumpTo(move)}>{description}</button>
+            {calculateWinner(squares)}
+          </li>
+        </>
+      );
+    }
+  });
+
+  return (
+    <>
+      <div className="main">
+        <h1>React tutorial: Tic-Tac-Toe</h1>
+        <div className="game">
+          <div className="game-board">
+            <Board
+              xIsNext={xIsNext}
+              squares={currentSquares}
+              onPlay={handlePlay}
+            />
+          </div>
+          <div className="game-info">
+            <ol>{moves}</ol>
+            <ResetButton move={currentMove} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Board({ xIsNext, squares, onPlay }) {
+  // const [xIsNext, setXIsNext] = useState(true);
+  // const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
     // Prevent overwriting or game over
@@ -25,14 +89,16 @@ export default function App() {
     } else {
       nextSquares[i] = 'O';
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
+    // setSquares(nextSquares);
+    // setXIsNext(!xIsNext);
   }
 
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+    // Set color
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -40,6 +106,7 @@ export default function App() {
   return (
     <>
       <div className="status">{status}</div>
+      <div className="status2">{winner}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -77,4 +144,22 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function ResetButton(moves) {
+  const squares = moves.squares;
+  console.log('moves', moves);
+  let description: String;
+  if (moves.move > 0) {
+    if (calculateWinner(squares)) {
+      console.log('Winner is', calculateWinner(squares));
+      description = 'New Game';
+      // return <button onClick="useState(0)">{description}</button>;
+    } else {
+      description = 'Restart';
+      // return <button onClick={useState(0)}>{description}</button>;
+    }
+  } else {
+    return <p>no</p>;
+  }
 }
